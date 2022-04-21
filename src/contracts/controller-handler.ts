@@ -102,8 +102,13 @@ export class ControllerHandler {
         const respJson = JSON.parse(response)
         if (respJson.message == 'OK') {
           const name: string = respJson.result[0].ContractName
-          this.cache.set(cacheKey, name, CACHE_STRATEGY_SEC)
-          return name
+          if (name != '') {
+            this.cache.set(cacheKey, name, CACHE_STRATEGY_SEC)
+            return name
+          } else {
+            // contract not verified
+            return STRATEGY_PLACEHOLDER
+          }
         } else return STRATEGY_PLACEHOLDER
       } else return STRATEGY_PLACEHOLDER
     } else {
