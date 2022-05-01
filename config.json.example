@@ -1,12 +1,21 @@
 {
   "port": "",
+  "eth": {
+    "enabled": true,
+    "provider": "https://eth-mainnet.alchemyapi.io/v2/key",
+    "scanKey": "etherscan_key",
+    "discord": "https://discord.com/api/webhooks/KEY",
+    "lookbackHarvests": true
+  },
   "polygon": {
+    "enabled": true,
     "provider": "https://polygon-mainnet.g.alchemy.com/v2/KEY",
     "scanKey": "polygonscan_key",
     "discord": "https://discord.com/api/webhooks/KEY",
     "lookbackHarvests": true
   },
   "bsc": {
+    "enabled": true,
     "provider": "https://bsc.getblock.io/mainnet/?api_key=KEY",
     "scanKey": "bscscan_key",
     "discord": "https://discord.com/api/webhooks/KEY",

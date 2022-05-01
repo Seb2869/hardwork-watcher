@@ -42,13 +42,13 @@ export class ControllerHandler {
     )
     const utcString = new Date(Number(timestamp) * 1000).toUTCString()
     const randomChadism = CHADISMS[Math.floor(Math.random() * CHADISMS.length)]
-    let profitWeth = 0
+    let sharedProfit = 0
     receipt.logs.forEach(log => {
-      if (log.address.toLowerCase() == addresses.WETH.toLowerCase()) {
-        const weth = Weth__factory.connect(addresses.WETH, this.provider)
-        const parsedLog = weth.interface.parseLog(log)
+      if (log.address.toLowerCase() == addresses.profitToken.toLowerCase()) {
+        const profitToken = Weth__factory.connect(addresses.profitToken, this.provider)
+        const parsedLog = profitToken.interface.parseLog(log)
         if (parsedLog.name == 'Transfer' && parsedLog.args.to == addresses.profitShare) {
-          profitWeth += Utils.formatUnits(parsedLog.args.value, 18)
+          sharedProfit += Utils.formatUnits(parsedLog.args.value, 18)
         }
       }
     })
@@ -77,8 +77,8 @@ export class ControllerHandler {
         sharePrice.toFixed(6) +
         '`!'
     }
-    if (profitWeth > 0) {
-      msg += '\n:farmer: WETH to profit share: `' + profitWeth + '`'
+    if (sharedProfit > 0) {
+      msg += '\n:farmer: ' + addresses.profitTokenName + ' to profit share: `' + sharedProfit + '`'
     }
     msg += ` <:chadright:758033272101011622> ${randomChadism}.`
     DiscordSender.sendHardWork(msg, addresses.discord)

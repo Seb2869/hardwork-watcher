@@ -12,101 +12,156 @@ export class Listener {
     const promServer = new PromServer(Number(config.port) || 9095)
     promServer.start()
 
-    const polygonProvider = new ethers.providers.JsonRpcProvider(config.polygon.provider)
-    const polygonLookback = config.polygon.lookbackHarvests || false
-    const polygonAddresses = new Addresses('polygon')
-    const polygonController = Controller__factory.connect(
-      polygonAddresses.controller,
-      polygonProvider,
-    )
-    const polygonControllerHandler = new ControllerHandler(
-      polygonProvider,
-      cacheProvider.instance(),
-    )
-    const bscProvider = new ethers.providers.JsonRpcProvider(config.bsc.provider)
-    const bscLookback = config.bsc.lookbackHarvests || false
-    const bscAddresses = new Addresses('bsc')
-    const bscController = Controller__factory.connect(bscAddresses.controller, bscProvider)
-    const bscControllerHandler = new ControllerHandler(bscProvider, cacheProvider.instance())
+    const ethEnabled = config.eth.enabled || false
+    if (ethEnabled) {
+      const ethProvider = new ethers.providers.JsonRpcProvider(config.eth.provider)
+      const ethLookback = config.eth.lookbackHarvests || false
+      const ethAddresses = new Addresses('eth')
+      const ethController = Controller__factory.connect(ethAddresses.controller, ethProvider)
+      const ethControllerHandler = new ControllerHandler(ethProvider, cacheProvider.instance())
 
-    if (polygonLookback) {
-      const lastBlock = Utils.getLastBlock(polygonAddresses.chainId)
-      console.log('Starting with Polygon lookback from block ' + lastBlock)
-      const events = await polygonController.queryFilter(
+      if (ethLookback) {
+        const lastBlock = Utils.getLastBlock(ethAddresses.chainId)
+        console.log('Starting with Ethereum lookback from block ' + lastBlock)
+        const events = await ethController.queryFilter(
+          ethController.filters.SharePriceChangeLog(),
+          lastBlock,
+          'latest',
+        )
+
+        for (const event of events) {
+          await ethControllerHandler.handleHardWork(
+            event.args.vault,
+            event.args.strategy,
+            event.args.oldSharePrice,
+            event.args.newSharePrice,
+            event.args.timestamp,
+            await event.getTransactionReceipt(),
+            ethAddresses,
+          )
+          await Utils.sleep(500)
+        }
+        console.log('Ethereum lookback done.')
+      }
+
+      ethController.on(
+        ethController.filters.SharePriceChangeLog(),
+        async (vault, strategy, oldSharePrice, newSharePrice, timestamp, event) => {
+          await ethControllerHandler.handleHardWork(
+            vault,
+            strategy,
+            oldSharePrice,
+            newSharePrice,
+            timestamp,
+            await event.getTransactionReceipt(),
+            ethAddresses,
+          )
+        },
+      )
+      console.log('Subscribed to Ethereum controller events.')
+    }
+
+    const polygonEnabled = config.polygon.enabled || false
+    if (polygonEnabled) {
+      const polygonProvider = new ethers.providers.JsonRpcProvider(config.polygon.provider)
+      const polygonLookback = config.polygon.lookbackHarvests || false
+      const polygonAddresses = new Addresses('polygon')
+      const polygonController = Controller__factory.connect(
+        polygonAddresses.controller,
+        polygonProvider,
+      )
+      const polygonControllerHandler = new ControllerHandler(
+        polygonProvider,
+        cacheProvider.instance(),
+      )
+
+      if (polygonLookback) {
+        const lastBlock = Utils.getLastBlock(polygonAddresses.chainId)
+        console.log('Starting with Polygon lookback from block ' + lastBlock)
+        const events = await polygonController.queryFilter(
+          polygonController.filters.SharePriceChangeLog(),
+          lastBlock,
+          'latest',
+        )
+
+        for (const event of events) {
+          await polygonControllerHandler.handleHardWork(
+            event.args.vault,
+            event.args.strategy,
+            event.args.oldSharePrice,
+            event.args.newSharePrice,
+            event.args.timestamp,
+            await event.getTransactionReceipt(),
+            polygonAddresses,
+          )
+          await Utils.sleep(500)
+        }
+        console.log('Polygon lookback done.')
+      }
+
+      polygonController.on(
         polygonController.filters.SharePriceChangeLog(),
-        lastBlock,
-        'latest',
+        async (vault, strategy, oldSharePrice, newSharePrice, timestamp, event) => {
+          await polygonControllerHandler.handleHardWork(
+            vault,
+            strategy,
+            oldSharePrice,
+            newSharePrice,
+            timestamp,
+            await event.getTransactionReceipt(),
+            polygonAddresses,
+          )
+        },
       )
-
-      for (const event of events) {
-        await polygonControllerHandler.handleHardWork(
-          event.args.vault,
-          event.args.strategy,
-          event.args.oldSharePrice,
-          event.args.newSharePrice,
-          event.args.timestamp,
-          await event.getTransactionReceipt(),
-          polygonAddresses,
-        )
-        await Utils.sleep(500)
-      }
-      console.log('Polygon lookback done.')
+      console.log('Subscribed to Polygon controller events.')
     }
 
-    polygonController.on(
-      polygonController.filters.SharePriceChangeLog(),
-      async (vault, strategy, oldSharePrice, newSharePrice, timestamp, event) => {
-        await polygonControllerHandler.handleHardWork(
-          vault,
-          strategy,
-          oldSharePrice,
-          newSharePrice,
-          timestamp,
-          await event.getTransactionReceipt(),
-          polygonAddresses,
+    const bscEnabled = config.bsc.enabled || false
+    if (bscEnabled) {
+      const bscProvider = new ethers.providers.JsonRpcProvider(config.bsc.provider)
+      const bscLookback = config.bsc.lookbackHarvests || false
+      const bscAddresses = new Addresses('bsc')
+      const bscController = Controller__factory.connect(bscAddresses.controller, bscProvider)
+      const bscControllerHandler = new ControllerHandler(bscProvider, cacheProvider.instance())
+      if (bscLookback) {
+        const lastBlock = Utils.getLastBlock(bscAddresses.chainId)
+        console.log('Starting with BSC lookback from block ' + lastBlock)
+        const events = await bscController.queryFilter(
+          bscController.filters.SharePriceChangeLog(),
+          lastBlock,
+          'latest',
         )
-      },
-    )
-    console.log('Subscribed to Polygon controller events.')
 
-    if (bscLookback) {
-      const lastBlock = Utils.getLastBlock(bscAddresses.chainId)
-      console.log('Starting with BSC lookback from block ' + lastBlock)
-      const events = await bscController.queryFilter(
+        for (const event of events) {
+          await bscControllerHandler.handleHardWork(
+            event.args.vault,
+            event.args.strategy,
+            event.args.oldSharePrice,
+            event.args.newSharePrice,
+            event.args.timestamp,
+            await event.getTransactionReceipt(),
+            bscAddresses,
+          )
+          await Utils.sleep(500)
+        }
+        console.log('BSC lookback done.')
+      }
+
+      bscController.on(
         bscController.filters.SharePriceChangeLog(),
-        lastBlock,
-        'latest',
+        async (vault, strategy, oldSharePrice, newSharePrice, timestamp, event) => {
+          await bscControllerHandler.handleHardWork(
+            vault,
+            strategy,
+            oldSharePrice,
+            newSharePrice,
+            timestamp,
+            await event.getTransactionReceipt(),
+            bscAddresses,
+          )
+        },
       )
-
-      for (const event of events) {
-        await bscControllerHandler.handleHardWork(
-          event.args.vault,
-          event.args.strategy,
-          event.args.oldSharePrice,
-          event.args.newSharePrice,
-          event.args.timestamp,
-          await event.getTransactionReceipt(),
-          bscAddresses,
-        )
-        await Utils.sleep(500)
-      }
-      console.log('BSC lookback done.')
+      console.log('Subscribed to BSC controller events.')
     }
-
-    bscController.on(
-      bscController.filters.SharePriceChangeLog(),
-      async (vault, strategy, oldSharePrice, newSharePrice, timestamp, event) => {
-        await bscControllerHandler.handleHardWork(
-          vault,
-          strategy,
-          oldSharePrice,
-          newSharePrice,
-          timestamp,
-          await event.getTransactionReceipt(),
-          bscAddresses,
-        )
-      },
-    )
-    console.log('Subscribed to BSC controller events.')
   }
 }
