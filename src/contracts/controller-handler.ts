@@ -5,7 +5,7 @@ import { Utils, DiscordSender } from '../lib'
 import { Addresses } from './'
 import NodeCache from 'node-cache'
 
-const TOKENS_URL = 'https://harvest.finance/data/tokens.json'
+const TOKENS_URL = 'https://app.harvest.finance/data/tokens.json'
 const TOKENS_FILE = 'tokens-cache.json'
 const STRATEGY_PLACEHOLDER = 'farming strategy'
 const CACHE_STRATEGY_SEC = 24 * 60 * 60 // 24 hours
