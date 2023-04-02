@@ -50,6 +50,19 @@ export class Addresses {
         '&address='
       this.scanUrl = 'https://bscscan.com/'
       this.discord = config.bsc.discord
+    } else if (net == 'arbitrum') {
+      this.network = 'Arbitrum'
+      this.chainId = '42161'
+      this.controller = '0xDED9a861da155b953f48DCDCe854A199bcEE0072'
+      this.profitToken = '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1'
+      this.profitTokenName = 'WETH'
+      this.profitShare = '0xf3D1A027E858976634F81B7c41B09A05A46EdA21'
+      this.scanApiUrl =
+        'https://api.arbiscan.io/api?module=contract&action=getsourcecode&apikey=' +
+        config.arbitrum.scanKey +
+        '&address='
+      this.scanUrl = 'https://arbiscan.io/'
+      this.discord = config.arbitrum.discord
     } else {
       throw Error('Unknown network ' + net)
     }

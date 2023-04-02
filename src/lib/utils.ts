@@ -6,7 +6,7 @@ const CACHE_MS = 3600000
 const BLOCK_FILE = 'last-block.json'
 
 export class Utils {
-  public static lastBlock: { [chainId: string]: number } = { '1': 0, '56': 0, '137': 0 }
+  public static lastBlock: { [chainId: string]: number } = { '1': 0, '56': 0, '137': 0, '42161': 0 }
 
   public static sleep(ms: number) {
     if (ms === 0) {

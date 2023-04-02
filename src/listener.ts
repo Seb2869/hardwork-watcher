@@ -163,5 +163,59 @@ export class Listener {
       )
       console.log('Subscribed to BSC controller events.')
     }
+
+    const arbitrumEnabled = config.arbitrum.enabled || false
+    if (arbitrumEnabled) {
+      const arbitrumProvider = new ethers.providers.JsonRpcProvider(config.arbitrum.provider)
+      const arbitrumLookback = config.arbitrum.lookbackHarvests || false
+      const arbitrumAddresses = new Addresses('arbitrum')
+      const arbitrumController = Controller__factory.connect(
+        arbitrumAddresses.controller,
+        arbitrumProvider,
+      )
+      const arbitrumControllerHandler = new ControllerHandler(
+        arbitrumProvider,
+        cacheProvider.instance(),
+      )
+      if (arbitrumLookback) {
+        const lastBlock = Utils.getLastBlock(arbitrumAddresses.chainId)
+        console.log('Starting with arbitrum lookback from block ' + lastBlock)
+        const events = await arbitrumController.queryFilter(
+          arbitrumController.filters.SharePriceChangeLog(),
+          lastBlock,
+          'latest',
+        )
+
+        for (const event of events) {
+          await arbitrumControllerHandler.handleHardWork(
+            event.args.vault,
+            event.args.strategy,
+            event.args.oldSharePrice,
+            event.args.newSharePrice,
+            event.args.timestamp,
+            await event.getTransactionReceipt(),
+            arbitrumAddresses,
+          )
+          await Utils.sleep(500)
+        }
+        console.log('arbitrum lookback done.')
+      }
+
+      arbitrumController.on(
+        arbitrumController.filters.SharePriceChangeLog(),
+        async (vault, strategy, oldSharePrice, newSharePrice, timestamp, event) => {
+          await arbitrumControllerHandler.handleHardWork(
+            vault,
+            strategy,
+            oldSharePrice,
+            newSharePrice,
+            timestamp,
+            await event.getTransactionReceipt(),
+            arbitrumAddresses,
+          )
+        },
+      )
+      console.log('Subscribed to arbitrum controller events.')
+    }
   }
 }
