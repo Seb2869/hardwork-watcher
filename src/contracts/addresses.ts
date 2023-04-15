@@ -30,7 +30,7 @@ export class Addresses {
       this.controller = '0xebaFc813f66c3142E7993a88EE3361a1f4BDaB16'
       this.profitToken = '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619'
       this.profitTokenName = 'WETH'
-      this.profitShare = '0xf00dD244228F51547f0563e60bCa65a30FBF5f7f'
+      this.profitShare = '0xF066789028fE31D4f53B69B81b328B8218Cc0641'
       this.scanApiUrl =
         'https://api.polygonscan.com/api?module=contract&action=getsourcecode&apikey=' +
         config.polygon.scanKey +
@@ -53,7 +53,7 @@ export class Addresses {
     } else if (net == 'arbitrum') {
       this.network = 'Arbitrum'
       this.chainId = '42161'
-      this.controller = '0xDED9a861da155b953f48DCDCe854A199bcEE0072'
+      this.controller = '0x68B2FC1566f411C1Af8fF5bFDA3dD4F3F3e59D03'
       this.profitToken = '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1'
       this.profitTokenName = 'WETH'
       this.profitShare = '0xf3D1A027E858976634F81B7c41B09A05A46EdA21'
