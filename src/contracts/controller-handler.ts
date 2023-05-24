@@ -126,7 +126,11 @@ export class ControllerHandler {
     )
 
     if (vaultName != undefined) {
-      return tokens.data[vaultName][query]
+      if (query == 'displayName') {
+        return vaultName
+      } else {
+        return tokens.data[vaultName][query]
+      }
     } else return undefined
   }
 }
