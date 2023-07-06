@@ -27,7 +27,7 @@ export class Addresses {
     } else if (net == 'polygon') {
       this.network = 'Polygon'
       this.chainId = '137'
-      this.controller = '0xebaFc813f66c3142E7993a88EE3361a1f4BDaB16'
+      this.controller = '0xA8F156088ebFCc4530507e4E3d145e2FC1E6124e'
       this.profitToken = '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619'
       this.profitTokenName = 'WETH'
       this.profitShare = '0xF066789028fE31D4f53B69B81b328B8218Cc0641'
