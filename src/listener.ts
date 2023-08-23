@@ -217,5 +217,53 @@ export class Listener {
       )
       console.log('Subscribed to arbitrum controller events.')
     }
+
+    const baseEnabled = config.base.enabled || false
+    if (baseEnabled) {
+      const baseProvider = new ethers.providers.JsonRpcProvider(config.base.provider)
+      const baseLookback = config.base.lookbackHarvests || false
+      const baseAddresses = new Addresses('base')
+      const baseController = Controller__factory.connect(baseAddresses.controller, baseProvider)
+      const baseControllerHandler = new ControllerHandler(baseProvider, cacheProvider.instance())
+      if (baseLookback) {
+        const lastBlock = Utils.getLastBlock(baseAddresses.chainId)
+        console.log('Starting with base lookback from block ' + lastBlock)
+        const events = await baseController.queryFilter(
+          baseController.filters.SharePriceChangeLog(),
+          lastBlock,
+          'latest',
+        )
+
+        for (const event of events) {
+          await baseControllerHandler.handleHardWork(
+            event.args.vault,
+            event.args.strategy,
+            event.args.oldSharePrice,
+            event.args.newSharePrice,
+            event.args.timestamp,
+            await event.getTransactionReceipt(),
+            baseAddresses,
+          )
+          await Utils.sleep(500)
+        }
+        console.log('base lookback done.')
+      }
+
+      baseController.on(
+        baseController.filters.SharePriceChangeLog(),
+        async (vault, strategy, oldSharePrice, newSharePrice, timestamp, event) => {
+          await baseControllerHandler.handleHardWork(
+            vault,
+            strategy,
+            oldSharePrice,
+            newSharePrice,
+            timestamp,
+            await event.getTransactionReceipt(),
+            baseAddresses,
+          )
+        },
+      )
+      console.log('Subscribed to base controller events.')
+    }
   }
 }

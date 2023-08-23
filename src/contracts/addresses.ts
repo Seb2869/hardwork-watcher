@@ -63,6 +63,19 @@ export class Addresses {
         '&address='
       this.scanUrl = 'https://arbiscan.io/'
       this.discord = config.arbitrum.discord
+    } else if (net == 'base') {
+      this.network = 'Base'
+      this.chainId = '8453'
+      this.controller = '0xF90FF0F7c8Db52bF1bF869F74226eAD125EFa745'
+      this.profitToken = '0x4200000000000000000000000000000000000006'
+      this.profitTokenName = 'WETH'
+      this.profitShare = '0x97b3e5712CDE7Db13e939a188C8CA90Db5B05131'
+      this.scanApiUrl =
+        'https://api.basescan.org/api?module=contract&action=getsourcecode&apikey=' +
+        config.base.scanKey +
+        '&address='
+      this.scanUrl = 'https://basescan.org/'
+      this.discord = config.base.discord
     } else {
       throw Error('Unknown network ' + net)
     }
