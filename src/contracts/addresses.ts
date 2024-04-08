@@ -14,10 +14,10 @@ export class Addresses {
     if (net == 'eth') {
       this.network = 'Ethereum'
       this.chainId = '1'
-      this.controller = '0x3cC47874dC50D98425ec79e647d83495637C55e3'
+      this.controller = '0xFb4d5649879724Fcd28fdbEf82Ff9832Ec40028c'
       this.profitToken = '0xa0246c9032bC3A600820415aE600c6388619A14D'
       this.profitTokenName = 'FARM'
-      this.profitShare = '0x8f5adC58b32D4e5Ca02EAC0E293D35855999436C'
+      this.profitShare = '0xE20c31e3d08027F5AfACe84A3A46B7b3B165053c'
       this.scanApiUrl =
         'https://api.etherscan.io/api?module=contract&action=getsourcecode&apikey=' +
         config.eth.scanKey +
