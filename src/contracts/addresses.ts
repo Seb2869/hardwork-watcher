@@ -14,7 +14,7 @@ export class Addresses {
     if (net == 'eth') {
       this.network = 'Ethereum'
       this.chainId = '1'
-      this.controller = '0xFb4d5649879724Fcd28fdbEf82Ff9832Ec40028c'
+      this.controller = '0x7583D7f36635E5642713ACCBdEd717ca59fdad07'
       this.profitToken = '0xa0246c9032bC3A600820415aE600c6388619A14D'
       this.profitTokenName = 'FARM'
       this.profitShare = '0xE20c31e3d08027F5AfACe84A3A46B7b3B165053c'
