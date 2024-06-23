@@ -85,10 +85,10 @@ export class Addresses {
       this.profitShare = '0xD8CC993c30Cc70059348bf01E11b1e61497F6335'
       this.scanApiUrl =
         'https://api-era.zksync.network/api?module=contract&action=getsourcecode&apikey=' +
-        config.base.scanKey +
+        config.zksync.scanKey +
         '&address='
       this.scanUrl = 'https://era.zksync.network/'
-      this.discord = config.base.discord
+      this.discord = config.zksync.discord
     } else {
       throw Error('Unknown network ' + net)
     }
