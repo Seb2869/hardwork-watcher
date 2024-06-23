@@ -76,6 +76,19 @@ export class Addresses {
         '&address='
       this.scanUrl = 'https://basescan.org/'
       this.discord = config.base.discord
+    } else if (net == 'zksync') {
+      this.network = 'zkSync'
+      this.chainId = '324'
+      this.controller = '0xC04b19b91EBe5DFBE285C89ACDdDBa0f7258c2Be'
+      this.profitToken = '0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91'
+      this.profitTokenName = 'WETH'
+      this.profitShare = '0xD8CC993c30Cc70059348bf01E11b1e61497F6335'
+      this.scanApiUrl =
+        'https://api-era.zksync.network/api?module=contract&action=getsourcecode&apikey=' +
+        config.base.scanKey +
+        '&address='
+      this.scanUrl = 'https://era.zksync.network/'
+      this.discord = config.base.discord
     } else {
       throw Error('Unknown network ' + net)
     }

@@ -265,5 +265,59 @@ export class Listener {
       )
       console.log('Subscribed to base controller events.')
     }
+
+    const zksyncEnabled = config.zksync.enabled || false
+    if (zksyncEnabled) {
+      const zksyncProvider = new ethers.providers.JsonRpcProvider(config.zksync.provider)
+      const zksyncLookback = config.zksync.lookbackHarvests || false
+      const zksyncAddresses = new Addresses('zksync')
+      const zksyncController = Controller__factory.connect(
+        zksyncAddresses.controller,
+        zksyncProvider,
+      )
+      const zksyncControllerHandler = new ControllerHandler(
+        zksyncProvider,
+        cacheProvider.instance(),
+      )
+      if (zksyncLookback) {
+        const lastBlock = Utils.getLastBlock(zksyncAddresses.chainId)
+        console.log('Starting with zksync lookback from block ' + lastBlock)
+        const events = await zksyncController.queryFilter(
+          zksyncController.filters.SharePriceChangeLog(),
+          lastBlock,
+          'latest',
+        )
+
+        for (const event of events) {
+          await zksyncControllerHandler.handleHardWork(
+            event.args.vault,
+            event.args.strategy,
+            event.args.oldSharePrice,
+            event.args.newSharePrice,
+            event.args.timestamp,
+            await event.getTransactionReceipt(),
+            zksyncAddresses,
+          )
+          await Utils.sleep(500)
+        }
+        console.log('zksync lookback done.')
+      }
+
+      zksyncController.on(
+        zksyncController.filters.SharePriceChangeLog(),
+        async (vault, strategy, oldSharePrice, newSharePrice, timestamp, event) => {
+          await zksyncControllerHandler.handleHardWork(
+            vault,
+            strategy,
+            oldSharePrice,
+            newSharePrice,
+            timestamp,
+            await event.getTransactionReceipt(),
+            zksyncAddresses,
+          )
+        },
+      )
+      console.log('Subscribed to zksync controller events.')
+    }
   }
 }

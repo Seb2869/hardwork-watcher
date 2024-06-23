@@ -131,6 +131,12 @@ export class ControllerHandler {
       } else {
         return tokens.data[vaultName][query]
       }
-    } else return undefined
+    } else {
+      if (query == 'displayName') {
+        return vaultAddress
+      } else {
+        return undefined
+      }
+    }
   }
 }
