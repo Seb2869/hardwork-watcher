@@ -19,7 +19,7 @@ export class Addresses {
       this.profitTokenName = 'FARM'
       this.profitShare = '0xE20c31e3d08027F5AfACe84A3A46B7b3B165053c'
       this.scanApiUrl =
-        'https://api.etherscan.io/api?module=contract&action=getsourcecode&apikey=' +
+        'https://api.etherscan.io/v2/api?chainid=1&module=contract&action=getsourcecode&apikey=' +
         config.eth.scanKey +
         '&address='
       this.scanUrl = 'https://etherscan.io/'
@@ -32,7 +32,7 @@ export class Addresses {
       this.profitTokenName = 'WETH'
       this.profitShare = '0xF066789028fE31D4f53B69B81b328B8218Cc0641'
       this.scanApiUrl =
-        'https://api.polygonscan.com/api?module=contract&action=getsourcecode&apikey=' +
+        'https://api.etherscan.io/v2/api?chainid=137&module=contract&action=getsourcecode&apikey=' +
         config.polygon.scanKey +
         '&address='
       this.scanUrl = 'https://polygonscan.com/'
@@ -45,7 +45,7 @@ export class Addresses {
       this.profitTokenName = 'WETH'
       this.profitShare = '0xf00dD244228F51547f0563e60bCa65a30FBF5f7f'
       this.scanApiUrl =
-        'https://api.bscscan.com/api?module=contract&action=getsourcecode&apikey=' +
+        'https://api.etherscan.io/v2/api?chainid=56&module=contract&action=getsourcecode&apikey=' +
         config.bsc.scanKey +
         '&address='
       this.scanUrl = 'https://bscscan.com/'
@@ -58,7 +58,7 @@ export class Addresses {
       this.profitTokenName = 'WETH'
       this.profitShare = '0xf3D1A027E858976634F81B7c41B09A05A46EdA21'
       this.scanApiUrl =
-        'https://api.arbiscan.io/api?module=contract&action=getsourcecode&apikey=' +
+        'https://api.etherscan.io/v2/api?chainid=42161&module=contract&action=getsourcecode&apikey=' +
         config.arbitrum.scanKey +
         '&address='
       this.scanUrl = 'https://arbiscan.io/'
@@ -71,7 +71,7 @@ export class Addresses {
       this.profitTokenName = 'WETH'
       this.profitShare = '0x97b3e5712CDE7Db13e939a188C8CA90Db5B05131'
       this.scanApiUrl =
-        'https://api.basescan.org/api?module=contract&action=getsourcecode&apikey=' +
+        'https://api.etherscan.io/v2/api?chainid=8453&module=contract&action=getsourcecode&apikey=' +
         config.base.scanKey +
         '&address='
       this.scanUrl = 'https://basescan.org/'
@@ -84,7 +84,7 @@ export class Addresses {
       this.profitTokenName = 'WETH'
       this.profitShare = '0xD8CC993c30Cc70059348bf01E11b1e61497F6335'
       this.scanApiUrl =
-        'https://api-era.zksync.network/api?module=contract&action=getsourcecode&apikey=' +
+        'https://api.etherscan.io/v2/api?chainid=324&module=contract&action=getsourcecode&apikey=' +
         config.zksync.scanKey +
         '&address='
       this.scanUrl = 'https://era.zksync.network/'
